@@ -1,10 +1,13 @@
 import { createContext } from 'react';
+import env from "react-dotenv";
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://127.0.0.1:8000/',
+  baseURL: env.BACKEND_URL || 'http://127.0.0.1:8000/',
   delayed: true // Simula um delay na api
 });
+
+console.log(env.BACKEND_URL);
 
 client.interceptors.request.use((config) => {
   if (config.delayed) {
