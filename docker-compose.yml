@@ -1,0 +1,33 @@
+version: "3.2"
+services:
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: kabum_db
+  nginx:
+    container_name: nginx
+    image: nginx:1.21.6
+    ports:
+      - 8000:80
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/site.conf
+      - ./app/backend:/php_app
+    links:
+      - php_app
+  php_app:
+    build: .
+    container_name: php_app
+    depends_on: 
+      - mysql
+    volumes:
+      - ./app/backend:/php_app
+    links:
+      - mysql
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_NAME: kabum_db
+      DATABASE_USER: root
+      DATABASE_PASS: secret
