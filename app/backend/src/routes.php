@@ -1,16 +1,17 @@
 <?php
 
-// Admin Auth
-$app->router->post('/auth/login', 'LoginController::login');
+$app->router->registerMiddleware('auth', 'Middlewares\AuthMiddleware::handle');
 
-$app->router->get('/auth/refresh', 'LoginController::refresh');
+$app->router->post('/auth/login', 'Controllers\LoginController::login');
 
-$app->router->get('/customers', 'CustomersController::list');
-$app->router->post('/customers', 'CustomersController::create');
-$app->router->post('/customers/{customer}', 'CustomersController::update');
-$app->router->delete('/customers/{customer}', 'CustomersController::delete');
+$app->router->get('/auth/refresh', 'Controllers\LoginController::refresh', ['auth']);
 
-$app->router->post('/customers/{customer}/addresses', 'AddressesController::create');
-$app->router->post('/customers/{customer}/addresses/{address}', 'AddressesController::update');
-$app->router->delete('/customers/{customer}/addresses/{address}', 'AddressesController::delete');
+$app->router->get('/customers', 'Controllers\CustomersController::list', ['auth']);
+$app->router->post('/customers', 'Controllers\CustomersController::create', ['auth']);
+$app->router->post('/customers/{customer}', 'Controllers\CustomersController::update', ['auth']);
+$app->router->delete('/customers/{customer}', 'Controllers\CustomersController::delete', ['auth']);
+
+$app->router->post('/customers/{customer}/addresses', 'Controllers\AddressesController::create', ['auth']);
+$app->router->post('/customers/{customer}/addresses/{address}', 'Controllers\AddressesController::update', ['auth']);
+$app->router->delete('/customers/{customer}/addresses/{address}', 'Controllers\AddressesController::delete', ['auth']);
 

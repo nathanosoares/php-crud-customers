@@ -5,25 +5,24 @@ namespace Nathan\Kabum\Middlewares;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Pecee\Http\Middleware\IMiddleware;
-use Pecee\Http\Request;
+use Nathan\Kabum\Core\Application;
 
-class AuthMiddleware implements IMiddleware
+class AuthMiddleware
 {
-    public function handle(Request $request): void
+    public function handle(Application $app): void
     {
-        if (!isset(request()->getHeaders()['http_authorization'])) {
-            response()->httpCode(401)->json([
-                "error" => "Sem permissão1"
-            ]);
+        if (!isset($_SERVER["HTTP_AUTHORIZATION"])) {
+            $app->request->response([
+                'error' => 'Unauthorized'
+            ], 401);
         }
 
-        $authorizationHeader = request()->getHeaders()['http_authorization'];
+        $authorizationHeader =  $_SERVER["HTTP_AUTHORIZATION"];
 
         if (substr($authorizationHeader, 0, 7) !== 'Bearer ') {
-            response()->httpCode(401)->json([
-                "error" => "Sem permissão2"
-            ]);
+            $app->request->response([
+                'error' => 'Unauthorized'
+            ], 401);
         }
 
         try {
@@ -31,9 +30,9 @@ class AuthMiddleware implements IMiddleware
 
             JWT::decode($token, new Key($_ENV['JWT_KEY'] ?? 'secret', 'HS256'));
         } catch (Exception $ignored) {
-            response()->httpCode(401)->json([
-                "error" => "Sem permissão3"
-            ]);
+            $app->request->response([
+                'error' => 'Unauthorized'
+            ], 401);
         }
     }
 }

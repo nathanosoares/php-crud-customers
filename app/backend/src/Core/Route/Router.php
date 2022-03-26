@@ -6,35 +6,45 @@ use Nathan\Kabum\Core\Application;
 
 class Router
 {
+    private array $middlewares = [];
+
     private array $routes = [];
 
     public function __construct(private Application $app)
     {
     }
 
-    public function get(string $pattern, callable|string $callback): void
+    public function registerMiddleware(string $name, callable|string $callback): void
     {
-        $this->method('get', $pattern, $callback);
+        $this->middlewares[$name] = $callback;
     }
 
-    public function post(string $pattern, callable|string $callback): void
+    public function get(string $pattern, callable|string $callback, $middlewares = []): void
     {
-        $this->method('post', $pattern, $callback);
+        $this->method('get', $pattern, $callback, $middlewares);
     }
 
-    public function delete(string $pattern, callable|string $callback): void
+    public function post(string $pattern, callable|string $callback, $middlewares = []): void
     {
-        $this->method('delete', $pattern, $callback);
+        $this->method('post', $pattern, $callback, $middlewares);
     }
 
-    private function method($method, $pattern, callable|string $callback)
+    public function delete(string $pattern, callable|string $callback, $middlewares = []): void
     {
-        $this->routes[$method][$pattern] = $callback;
+        $this->method('delete', $pattern, $callback, $middlewares);
+    }
+
+    private function method($method, $pattern, callable|string $callback, $middlewares = []): void
+    {
+        $this->routes[$method][$pattern] = [
+            'callback' => $callback,
+            'middlewares' => $middlewares
+        ];
     }
 
     private function handle($path, $routes): void
     {
-        foreach ($routes as $pattern => $callback) {
+        foreach ($routes as $pattern => $data) {
 
             // Ref: https://github.com/bramus/router/blob/55657b76da8a0a509250fb55b9dd24e1aa237eba/src/Bramus/Router/Router.php#L389
             $p = preg_replace('/\/{(.*?)}/', '/(.*?)', $pattern);
@@ -61,14 +71,20 @@ class Router
                 }, $matches, array_keys($matches));
 
                 $params = [$this->app, ...$params];
-                if (is_callable($callback)) {
-                    call_user_func_array($callback, $params);
-                } else {
-                    list($class, $method) = explode('::', $callback);
-                    $classPath = 'Nathan\\Kabum\\Controllers\\' . $class;
 
-                    call_user_func_array([new $classPath(), $method], $params);
+                [
+                    'callback' => $callback,
+                    'middlewares' => $middlewares
+                ] = $data;
+
+                foreach ($middlewares as $middleware) {
+                    $middleware = $this->middlewares[$middleware];
+
+                    $this->executeCallback($middleware, [$this->app]);
                 }
+
+                $this->executeCallback($callback, $params);
+
                 exit(0);
             }
         }
@@ -77,6 +93,18 @@ class Router
             "error" => "not found",
             "code" => 404
         ], 404);
+    }
+
+    private function executeCallback(callable|string $callback, array $params = [])
+    {
+        if (is_callable($callback)) {
+            call_user_func_array($callback, $params);
+        } else {
+            list($class, $method) = explode('::', $callback);
+            $classPath = 'Nathan\\Kabum\\' . $class;
+
+            call_user_func_array([new $classPath(), $method], $params);
+        }
     }
 
     public function start(): void

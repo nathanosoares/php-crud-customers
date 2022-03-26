@@ -47,34 +47,15 @@ class LoginController
 
     public function refresh(Application $app): void
     {
-
-        if (!isset($_SERVER["HTTP_AUTHORIZATION"])) {
-            $app->request->response([
-                'success' => false
-            ], 400);
-        }
-
-        $authorizationHeader =  $_SERVER["HTTP_AUTHORIZATION"];
-
-        if (substr($authorizationHeader, 0, 7) !== 'Bearer ') {
-            $app->request->response([
-                'success' => false
-            ], 400);
-        }
-
         try {
-            $token = trim(substr($authorizationHeader, 7));
-
-            JWT::decode($token, new Key($_ENV['JWT_KEY'] ?? 'secret', 'HS256'));
-
             $app->request->response([
                 'success' => true,
                 'token' => $this->generateJWTToken()
             ]);
         } catch (Exception $ignored) {
             $app->request->response([
-                'success' => false
-            ], 400);
+                'error' => 'Unauthorized'
+            ], 401);
         }
     }
 
