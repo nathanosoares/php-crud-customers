@@ -1,9 +1,8 @@
 # CRUD simples para gerenciamento de clientes
 O projeto não foi pensado para ser usado em produção, seu objetivo é didático.
 
-
 ## Como rodar?
-___
+
 ### Usando Docker (Recomendado)
 **Requisitos:**
 
@@ -14,7 +13,7 @@ Use o comando `docker-compose up` para subir a aplicação.
 
 o `frontend` estará disponível em http://127.0.0.1:3000/ e o `backend` em http://127.0.0.1:8000/
 
-*O MySQL é resetado em todo restart*
+*O MySQL é resetado a cada restart.*
 
 ### Usando a paciência
 **Requisitos:**
@@ -35,7 +34,7 @@ Configure as credenciais do MySQL no arquivo `.env` na pasta raiz do `backend`
 
 Agora vamos criar as tabelas no MySQL rodando o comando `php composer.phar setup-database` também na pasta raiz do `backend`
 
-Vcê pode acessar o nginx com a porta e server_name que você configurou.
+Você pode acessar o nginx com a porta e server_name que você configurou.
 
 Se tudo estiver certo você terá o seguinte retorno:
 
