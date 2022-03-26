@@ -2,7 +2,7 @@ FROM php:8.1-fpm-alpine
 
 # icu-dev - Unicode library
 # oniguruma-dev - Regex library
-# oniguruma-dev - Timezone library
+# tzdata - Timezone library
 
 RUN apk update --no-cache \
     && apk add \
