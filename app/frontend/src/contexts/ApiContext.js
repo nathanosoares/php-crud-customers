@@ -7,8 +7,6 @@ const client = axios.create({
   delayed: true // Simula um delay na api
 });
 
-console.log(env.BACKEND_URL);
-
 client.interceptors.request.use((config) => {
   if (config.delayed) {
     return new Promise(resolve => setTimeout(() => resolve(config), 300));
@@ -37,8 +35,12 @@ export const ApiContextProvider = ({ children }) => {
       return { success: false, error: response.data.error };
 
     } catch (error) {
+      
+      if (error.response) {
+        return { success: false, error: error.response.data.error };
+      }
 
-      return { success: false, error };
+      return { success: false };
 
     }
   };

@@ -90,7 +90,7 @@ class CustomersController
             ], 400);
         }
 
-        if (!Validator::validateDate($birthDate)) {
+        if (!Validator::validateDate($birthDate, 'd/m/Y')) {
             $app->request->response([
                 'success' => false,
                 'error' => 'O campo data de nascimento está inválido.'

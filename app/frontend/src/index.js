@@ -7,13 +7,11 @@ import AuthContextProvider from './contexts/AuthContext';
 import { ApiContextProvider } from './contexts/ApiContext';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApiContextProvider>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
-    </ApiContextProvider>
-  </React.StrictMode>,
+  <ApiContextProvider>
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
+  </ApiContextProvider>,
   document.getElementById('root')
 );
 

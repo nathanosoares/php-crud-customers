@@ -16,6 +16,8 @@ class Customer implements JsonSerializable
         'addresses' => 'addresses',
     ];
 
+    private array $publicFieldsMorphs;
+
     public function __construct(
         public $id,
         public $name,
@@ -25,6 +27,9 @@ class Customer implements JsonSerializable
         public $phone,
         public $addresses
     ) {
+        $this->publicFieldsMorphs = [
+            'birthDate' => fn($birthDate) => date_format(date_create($birthDate), 'd/m/Y'),
+        ];
     }
 
     public static function fromDatabaseRow($row, $addresses): self
@@ -44,8 +49,16 @@ class Customer implements JsonSerializable
     {
         $output = [];
 
+
         foreach ($this->publicFieldsMap as $key => $value) {
-            $output[$value] = $this->{$key};
+   
+            $publicFieldValue = $this->{$key};
+
+            if (isset($this->publicFieldsMorphs[$key]) && is_callable($this->publicFieldsMorphs[$key])) {
+                $publicFieldValue = $this->publicFieldsMorphs[$key]($publicFieldValue);
+            }
+
+            $output[$value] = $publicFieldValue;
         }
 
         return $output;

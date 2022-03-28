@@ -76,6 +76,7 @@ function CustomerForm() {
       <FormInput
         type="text"
         name="birth_date"
+        mask="99/99/9999"
         value={customer.birth_date || ""}
         onChange={handleChanges}
       />
@@ -84,6 +85,7 @@ function CustomerForm() {
       <FormInput
         type="text"
         name="document_cpf"
+        mask="999.999.999-99"
         value={customer.document_cpf || ""}
         onChange={handleChanges}
       />
@@ -100,6 +102,7 @@ function CustomerForm() {
       <FormInput
         type="text"
         name="phone"
+        mask="(99) 99999-9999"
         value={customer.phone || ""}
         onChange={handleChanges}
       />

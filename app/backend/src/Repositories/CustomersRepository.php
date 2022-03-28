@@ -40,7 +40,12 @@ class CustomersRepository
     public function update(Customer $customer): void
     {
         $query = "UPDATE `customers` 
-        SET `name` = ?, `birth_date` = ?, `cpf` = ?, `rg` = ?, `phone` = ? 
+        SET 
+          `name` = ?, 
+          `birth_date` = DATE_FORMAT(STR_TO_DATE(?, '%d/%m/%Y'), '%Y-%m-%d'), 
+          `cpf` = ?, 
+          `rg` = ?, 
+          `phone` = ? 
         WHERE `id` = ?;";
 
         DB::getInstance()->query($query, [
@@ -55,7 +60,8 @@ class CustomersRepository
 
     public function create($data): ?int
     {
-        $query = "INSERT INTO `customers` (`name`, `birth_date`, `cpf`, `rg`, `phone`) VALUES (?, ?, ?, ?, ?);";
+        $query = "INSERT INTO `customers` (`name`, `birth_date`, `cpf`, `rg`, `phone`) 
+        VALUES (?, DATE_FORMAT(STR_TO_DATE(?, '%d/%m/%Y'), '%Y-%m-%d'), ?, ?, ?);";
 
         DB::getInstance()->query($query, [
             $data['name'],

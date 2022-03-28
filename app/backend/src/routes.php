@@ -6,7 +6,7 @@ $app->router->post('/auth/login', 'Controllers\LoginController::login');
 
 $app->router->get('/auth/refresh', 'Controllers\LoginController::refresh', ['auth']);
 
-$app->router->get('/customers', 'Controllers\CustomersController::list', ['auth']);
+$app->router->get('/customers', 'Controllers\CustomersController::list');
 $app->router->post('/customers', 'Controllers\CustomersController::create', ['auth']);
 $app->router->post('/customers/{customer}', 'Controllers\CustomersController::update', ['auth']);
 $app->router->delete('/customers/{customer}', 'Controllers\CustomersController::delete', ['auth']);

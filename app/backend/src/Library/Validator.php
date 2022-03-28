@@ -77,6 +77,8 @@ class Validator
             return false;
         }
 
+        $phone = preg_replace('/[^0-9]/is', '', $phone);
+
         return preg_match('/^\(?\d{2}\)?\s?\d{4,5}\-?\d{4}$/', $phone);
     }
 }

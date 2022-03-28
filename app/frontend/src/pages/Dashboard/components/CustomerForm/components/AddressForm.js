@@ -21,6 +21,7 @@ function AddressForm({ address: data = {} }) {
   const handleChanges = (event) => {
     const name = event.target.name;
     const value = event.target.value;
+    
     setAddress(values => ({ ...values, [name]: value }));
 
     if (name == 'cep') {
@@ -29,6 +30,8 @@ function AddressForm({ address: data = {} }) {
   }
 
   const handleCepChange = async (cep) => {
+
+    cep = cep.replace(/[^\d]/g, "");
 
     if (cep && cep.length == 8) {
       const response = await viaCepClient.get(`${cep}/json`);
@@ -66,7 +69,7 @@ function AddressForm({ address: data = {} }) {
 
       <div className="px-4">
         <label>CEP:</label>
-        <FormInput type="text" name="cep" id="cep" value={address.cep || ""} onChange={handleChanges} disabled={disabled.cep} />
+        <FormInput mask="99999-999" type="text" name="cep" id="cep" value={address.cep || ""} onChange={handleChanges} disabled={disabled.cep} />
       </div>
 
       <div className="w-4/6 inline-block px-4">
