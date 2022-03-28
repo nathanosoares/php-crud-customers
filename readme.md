@@ -13,6 +13,8 @@ Use o comando `docker-compose up` para subir a aplicação.
 
 o `frontend` estará disponível em http://127.0.0.1:3000/ e o `backend` em http://127.0.0.1:8000/
 
+\* O npm pode demorar um pouco para instalar as dependencias, isso pode atrasar a disponibilidade do `frontend` em alguns segundos.
+
 *O MySQL é resetado a cada restart.*
 
 ### Usando a paciência
