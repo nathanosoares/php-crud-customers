@@ -11,4 +11,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["/setup.sh"]
+CMD ["npm", "start"]

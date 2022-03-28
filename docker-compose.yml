@@ -7,7 +7,6 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: kabum_db
   nginx:
-    container_name: nginx
     image: nginx:1.21.6
     restart: always
     ports:
